@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   nameContainer: {
     flex: 1,
     flexDirection: "column",
-    gap: 10,
+    gap: 5,
   },
   text: {
     color: "#fff",
@@ -30,9 +30,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   tinyLogo: {
-    width: 30,
-    height: 30,
-    borderRadius: 30 / 2,
+    width: 40,
+    height: 40,
+    borderRadius: 40 / 2,
   },
 });
 

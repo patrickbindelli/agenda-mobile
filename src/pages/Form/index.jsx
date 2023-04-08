@@ -1,7 +1,12 @@
-import React, { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+  ToastAndroid,
+} from "react-native";
 import Card from "../../components/Card";
-import Header from "../../components/Header";
 import StyledInput from "../../components/StyledInput";
 
 import DateIput from "../../components/DateInput";
@@ -9,12 +14,14 @@ import styles from "./styles";
 
 import { MaterialIcons } from "@expo/vector-icons";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LabeledContainer } from "../../components/LabeledContainer";
 import { setAyncData } from "../../utils/fetchData";
 
+import ProfilePicturePicker from "../../components/ProfilePicturePicker";
+
 const Form = ({ navigation }) => {
   const [formData, setFormData] = useState({
+    profilePicture: null,
     firstName: "",
     lastName: "",
     birthday: "",
@@ -30,22 +37,27 @@ const Form = ({ navigation }) => {
     },
   });
 
+  function showSuccessToast() {
+    ToastAndroid.show("Contato salvo com sucesso.", ToastAndroid.SHORT);
+  }
+
   const handleCancel = () => {
     navigation.goBack();
   };
 
   const storeData = async (value) => {
-    setAyncData(value)
-      .then(() => {
-        console.log("salvei");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setAyncData(value).then(() => {
+      showSuccessToast();
+      navigation.goBack();
+    });
   };
 
   const handleInputChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
+  };
+
+  const setProfilePicture = (image) => {
+    handleInputChange("profilePicture", image);
   };
 
   const handleAddArrayField = (array, arrayField) => {
@@ -92,12 +104,14 @@ const Form = ({ navigation }) => {
   };
 
   return (
-    <>
-      <Header title={"Adicionar Contato"} color={"#161618"} shading={0} />
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={{ paddingBottom: 30, paddingTop: 20 }}
-      >
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        <View style={styles.profilePictureContainer}>
+          <ProfilePicturePicker
+            image={formData.profilePicture}
+            setImage={setProfilePicture}
+          />
+        </View>
         <Card>
           <LabeledContainer label={"Nome"}>
             <StyledInput
@@ -245,7 +259,9 @@ const Form = ({ navigation }) => {
       <View style={styles.options}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => storeData(formData)}
+          onPress={() => {
+            storeData(formData);
+          }}
         >
           <Text style={styles.buttonText}>Salvar</Text>
         </TouchableOpacity>
@@ -254,7 +270,7 @@ const Form = ({ navigation }) => {
           <Text style={styles.buttonText}>Cancelar</Text>
         </TouchableOpacity>
       </View>
-    </>
+    </View>
   );
 };
 

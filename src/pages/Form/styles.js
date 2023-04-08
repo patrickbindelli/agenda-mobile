@@ -5,11 +5,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#161618",
-    paddingBottom: 100,
+  },
+  scrollView: {
+    paddingBottom: 30,
+    paddingTop: 20,
+    gap: 30,
+    paddingHorizontal: 10,
   },
   labeledContainer: {
     width: "100%",
     gap: 10,
+  },
+  profilePictureContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   icon: {
     alignItems: "center",

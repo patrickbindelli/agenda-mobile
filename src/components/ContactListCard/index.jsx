@@ -22,7 +22,7 @@ export const ContactListCard = ({ title, data, onPress }) => {
                 <Image
                   style={styles.tinyLogo}
                   source={{
-                    uri: "https://reactnative.dev/img/tiny_logo.png",
+                    uri: element.profilePicture,
                   }}
                 />
                 <View style={styles.nameContainer}>

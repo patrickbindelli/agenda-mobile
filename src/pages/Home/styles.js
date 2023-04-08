@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   scrollView: {
-    rowGap: 10,
+    gap: 10,
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-start",

@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-    backgroundColor: shade(0.2, "#2C2250"),
+    backgroundColor: "#2C2250",
     gap: 20,
   },
   profilePicture: {

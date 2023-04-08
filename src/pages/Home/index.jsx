@@ -1,11 +1,10 @@
-import { ScrollView, View, Text } from "react-native";
-import ContactListCard from "../../components/ContactListCard";
-import Header from "../../components/Header";
-import styles from "./styles";
+import { ScrollView, Text, View } from "react-native";
 import Button from "../../components/Button";
+import ContactListCard from "../../components/ContactListCard";
+import styles from "./styles";
 
 import { useEffect, useState } from "react";
-import { getAsyncData, resetAsyncData } from "../../utils/fetchData";
+import { getAsyncData } from "../../utils/fetchData";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { SearchBar } from "../../components/SearchBar";
@@ -19,7 +18,6 @@ const Home = ({ navigation }) => {
 
   useEffect(() => {
     getAsyncData().then((data) => {
-      console.log(data);
       if (data.length) setData(data);
     });
   }, [isFocused]);
@@ -30,7 +28,6 @@ const Home = ({ navigation }) => {
 
   return (
     <>
-      <Header title={"Contatos"} color={"#161618"} />
       <View style={styles.container}>
         <View style={styles.searchBarContainer}>
           <SearchBar />

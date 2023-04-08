@@ -15,16 +15,14 @@ export const getAsyncData = async () => {
 
 export const setAyncData = async (value) => {
   let data = await getAsyncData();
+  console.log("aaaaaa");
+  console.log(uuidv4());
   value.id = uuidv4();
+
   data.push(value);
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 };
 
 export const resetAsyncData = async () => {
-  try {
-    await AsyncStorage.removeItem(STORAGE_KEY);
-    console.log("Chave removida");
-  } catch (err) {
-    console.log("é deu erro fi");
-  }
+  await AsyncStorage.removeItem(STORAGE_KEY);
 };
