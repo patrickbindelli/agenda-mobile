@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
   ScrollView,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
-  ToastAndroid,
 } from "react-native";
 import Card from "../../components/Card";
 import StyledInput from "../../components/StyledInput";
@@ -18,6 +18,7 @@ import { LabeledContainer } from "../../components/LabeledContainer";
 import { setAyncData } from "../../utils/fetchData";
 
 import ProfilePicturePicker from "../../components/ProfilePicturePicker";
+import useGetCep from "../../hooks/userGetCep";
 
 const Form = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -36,6 +37,29 @@ const Form = ({ navigation }) => {
       country: "",
     },
   });
+
+  const { address, error, loading, consultCEP } = useGetCep();
+
+  const handleConsultCep = () => {
+    ToastAndroid.show("Pesquisando CEP...", ToastAndroid.SHORT);
+    consultCEP(formData.address.postalCode);
+  };
+
+  useEffect(() => {
+    if (!loading && address && !error) {
+      setFormData({
+        ...formData,
+        address: {
+          ...formData.address,
+          street: address.logradouro,
+          postalCode: address.cep,
+          neighborhood: address.bairro,
+          city: address.localidade,
+          country: "Brasil",
+        },
+      });
+    }
+  }, [loading, address, error]);
 
   function showSuccessToast() {
     ToastAndroid.show("Contato salvo com sucesso.", ToastAndroid.SHORT);
@@ -211,11 +235,22 @@ const Form = ({ navigation }) => {
 
           <LabeledContainer label={"Endereço"}>
             <StyledInput
+              title={"CEP"}
+              value={formData.address.postalCode}
+              onChangeText={(value) => {
+                handleAddresChange("postalCode", value);
+              }}
+              icon={<MaterialIcons name="search" size={24} color="#A09FA6" />}
+              onSubmit={handleConsultCep}
+              editable={!loading}
+            />
+            <StyledInput
               title={"Rua"}
               value={formData.address.street}
               onChangeText={(value) => {
                 handleAddresChange("street", value);
               }}
+              editable={!loading}
             />
             <StyledInput
               title={"Número"}
@@ -230,6 +265,7 @@ const Form = ({ navigation }) => {
               onChangeText={(value) => {
                 handleAddresChange("neighborhood", value);
               }}
+              editable={!loading}
             />
             <StyledInput
               title={"Cidade"}
@@ -237,13 +273,7 @@ const Form = ({ navigation }) => {
               onChangeText={(value) => {
                 handleAddresChange("city", value);
               }}
-            />
-            <StyledInput
-              title={"CEP"}
-              value={formData.address.postalCode}
-              onChangeText={(value) => {
-                handleAddresChange("postalCode", value);
-              }}
+              editable={!loading}
             />
             <StyledInput
               title={"País"}

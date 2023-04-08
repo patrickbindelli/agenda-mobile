@@ -9,18 +9,24 @@ const styles = StyleSheet.create({
     gap: 5,
     paddingVertical: 5,
   },
+  inputContainer: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
   text: {
     color: "#A09FA6",
     fontSize: 15,
   },
   input: {
-    width: "100%",
+    flex: 1,
     height: 30,
     color: "#fff",
     fontSize: 15,
   },
   inputOnFocus: {
-    width: "100%",
+    flex: 1,
     height: 30,
     color: "#fff",
     fontSize: 15,
