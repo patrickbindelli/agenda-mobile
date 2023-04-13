@@ -4,6 +4,8 @@ import Card from "../Card";
 import styles from "./styles";
 import { Separator } from "../Separator";
 
+import FakeProfilePicture from "../FakeProfilePicture";
+
 export const ContactListCard = ({ title, data, onPress }) => {
   return (
     <View style={styles.container}>
@@ -17,14 +19,22 @@ export const ContactListCard = ({ title, data, onPress }) => {
               <TouchableOpacity
                 key={index}
                 style={styles.cardContainer}
-                onPress={() => onPress(index)}
+                onPress={() => onPress(element)}
+                onLongPress={() => {
+                  /* TODO função para excluir o elemento selecionado */
+                }}
               >
-                <Image
-                  style={styles.tinyLogo}
-                  source={{
-                    uri: element.profilePicture,
-                  }}
-                />
+                {element.profilePicture && (
+                  <Image
+                    style={styles.tinyLogo}
+                    source={{
+                      uri: element.profilePicture,
+                    }}
+                  />
+                )}
+
+                {!element.profilePicture && <FakeProfilePicture size={40} />}
+
                 <View style={styles.nameContainer}>
                   <Text
                     style={styles.text}

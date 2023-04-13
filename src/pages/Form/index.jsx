@@ -15,7 +15,7 @@ import styles from "./styles";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { LabeledContainer } from "../../components/LabeledContainer";
-import { setAyncData } from "../../utils/fetchData";
+import { setAsyncData } from "../../utils/fetchData";
 
 import ProfilePicturePicker from "../../components/ProfilePicturePicker";
 import useGetCep from "../../hooks/userGetCep";
@@ -70,7 +70,7 @@ const Form = ({ navigation }) => {
   };
 
   const storeData = async (value) => {
-    setAyncData(value).then(() => {
+    setAsyncData(value).then(() => {
       showSuccessToast();
       navigation.goBack();
     });

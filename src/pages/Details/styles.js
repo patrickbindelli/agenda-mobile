@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   },
   verticalContainer: {
     width: "100%",
+    gap: 10,
   },
 });
 

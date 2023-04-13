@@ -1,25 +1,31 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import "react-native-get-random-values";
-import { v4 as uuidv4 } from "uuid";
+import * as Crypto from "expo-crypto";
 
 const STORAGE_KEY = "contatos";
 
 export const getAsyncData = async () => {
-  let data = [];
   const response = await AsyncStorage.getItem(STORAGE_KEY);
-
-  if (response) data = JSON.parse(response);
-
-  return data;
+  return response ? JSON.parse(response) : undefined;
 };
 
-export const setAyncData = async (value) => {
-  let data = await getAsyncData();
-  console.log("aaaaaa");
-  console.log(uuidv4());
-  value.id = uuidv4();
+export const setAsyncData = async (value) => {
+  const name = value.firstName.trim();
+  const firstChar = name.charAt(0).toUpperCase();
 
-  data.push(value);
+  let data = await getAsyncData();
+  if (!data) {
+    data = {};
+  }
+
+  const UUID = Crypto.randomUUID();
+  value.id = UUID;
+
+  if (/^[A-Z]/.test(firstChar)) {
+    data[firstChar] ? data[firstChar].push(value) : (data[firstChar] = [value]);
+  } else {
+    data["#"] ? data["#"].push(value) : (data["#"] = [value]);
+  }
+
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 };
 

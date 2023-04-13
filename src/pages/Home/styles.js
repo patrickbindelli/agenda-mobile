@@ -11,9 +11,10 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     gap: 10,
-    flex: 1,
+    flexGrow: 1,
     alignItems: "center",
     justifyContent: "flex-start",
+    paddingBottom: 100,
   },
   searchBarContainer: {
     width: "100%",
@@ -30,7 +31,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   content: {
-    flex: 1,
     width: "100%",
     alignContent: "center",
   },

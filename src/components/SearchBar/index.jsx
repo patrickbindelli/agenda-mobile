@@ -3,14 +3,14 @@ import { View, TextInput, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import styles from "./styles";
 
-export const SearchBar = ({ value, onValueChange, onPress }) => {
+export const SearchBar = ({ value, onChangeText, onPress }) => {
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.textInput}
         selectionColor={"#6E56CF"}
         value={value}
-        onValueChange={onValueChange}
+        onChangeText={onChangeText}
         onSubmitEditing={onPress}
       />
       <TouchableOpacity onPress={onPress}>
