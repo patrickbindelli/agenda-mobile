@@ -26,6 +26,14 @@ yarn start
 
 Isso irá executar o projeto no seu terminal. A partir daí, você pode executar o aplicativo utilizando o app Expo Go.
 
+## Protótipos Figma
+
+<div>
+<img src="https://user-images.githubusercontent.com/68287231/232182659-de1bf39f-6170-4de1-a147-6bb428edc4ab.png" alt="Detalhes Contato" width="300">
+<img src="https://user-images.githubusercontent.com/68287231/232182660-ec084485-d2e1-4d8a-ad99-b296d9a9dea4.png" alt="Lista Contatos" width="300">
+<img src="https://user-images.githubusercontent.com/68287231/232182662-dbc221c7-458f-4d9b-8f55-f87a5d7df9a4.png" alt="Form" width="300">
+</div>
+
 ## Licença
 
 Este projeto está licenciado sob a licença MIT. Para mais informações, consulte o arquivo LICENSE.
