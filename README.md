@@ -29,9 +29,9 @@ Isso irá executar o projeto no seu terminal. A partir daí, você pode executar
 ## Protótipos Figma
 
 <div>
-<img src="https://user-images.githubusercontent.com/68287231/232182846-1927ff44-eb4b-462e-80ac-e5d1234540c6.png" alt="Detalhes Contato" width="300">
-<img src="https://user-images.githubusercontent.com/68287231/232182847-9ffe5a07-a7fe-4df9-8737-ecfbd1372a4c.png" alt="Lista Contatos" width="300">
-<img src="https://user-images.githubusercontent.com/68287231/232182848-431e9ac7-6f79-489b-9692-121700f87211.png" alt="Form" width="300">
+<img src="https://user-images.githubusercontent.com/68287231/232182846-1927ff44-eb4b-462e-80ac-e5d1234540c6.png" alt="Detalhes Contato" width="200">
+<img src="https://user-images.githubusercontent.com/68287231/232182847-9ffe5a07-a7fe-4df9-8737-ecfbd1372a4c.png" alt="Lista Contatos" width="200">
+<img src="https://user-images.githubusercontent.com/68287231/232182848-431e9ac7-6f79-489b-9692-121700f87211.png" alt="Form" width="200">
 </div>
 
 ## Licença
