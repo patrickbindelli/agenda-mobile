@@ -1,21 +1,19 @@
-import { ScrollView, Text, View } from "react-native";
-import Button from "../../components/Button";
-import ContactListCard from "../../components/ContactListCard";
-import styles from "./styles";
+import { MaterialIcons } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
+import { ScrollView, Text, View } from 'react-native';
 
-import { useEffect, useState } from "react";
-import { getAsyncData, resetAsyncData } from "../../utils/fetchData";
-
-import { MaterialIcons } from "@expo/vector-icons";
-import { SearchBar } from "../../components/SearchBar";
-
-import { useIsFocused } from "@react-navigation/native";
+import styles from './styles';
+import Button from '../../components/Button';
+import ContactListCard from '../../components/ContactListCard';
+import { SearchBar } from '../../components/SearchBar';
+import { getAsyncData } from '../../utils/fetchData';
 
 const Home = ({ navigation }) => {
   const isFocused = useIsFocused();
 
   const [data, setData] = useState();
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState({});
 
   useEffect(() => {
@@ -28,7 +26,7 @@ const Home = ({ navigation }) => {
   }, [isFocused]);
 
   const handleOnPress = (contact) => {
-    navigation.navigate("Details", { id: contact.id });
+    navigation.navigate('Details', { id: contact.id });
   };
 
   const handleSearch = () => {
@@ -38,7 +36,7 @@ const Home = ({ navigation }) => {
       const contacts = data[key].filter(
         (contact) =>
           contact.firstName.toLowerCase().includes(searchText.toLowerCase()) ||
-          contact.lastName.toLowerCase().includes(searchText.toLowerCase())
+          contact.lastName.toLowerCase().includes(searchText.toLowerCase()),
       );
 
       if (contacts.length > 0) {
@@ -53,28 +51,20 @@ const Home = ({ navigation }) => {
     <>
       <View style={styles.container}>
         <View style={styles.searchBarContainer}>
-          <SearchBar
-            value={searchText}
-            onChangeText={setSearchText}
-            onPress={handleSearch}
-          />
+          <SearchBar value={searchText} onChangeText={setSearchText} onPress={handleSearch} />
           <Button
             onPress={() => {
-              navigation.navigate("Add");
+              navigation.navigate('Add');
             }}
             icon={<MaterialIcons name="add" size={24} color="#A09FA6" />}
-            background={"transparent"}
+            background="transparent"
           />
         </View>
-        <ScrollView
-          style={styles.content}
-          contentContainerStyle={styles.scrollView}
-        >
+        <ScrollView style={styles.content} contentContainerStyle={styles.scrollView}>
           {!Object.keys(searchResults).length && (
             <View style={styles.textContainer}>
               <Text style={styles.text}>
-                Nenhum dado encontrado...{"\n"}Clique em '+' para adicionar um
-                novo contato
+                Nenhum dado encontrado...{'\n'}Clique em '+' para adicionar um novo contato
               </Text>
             </View>
           )}
@@ -84,12 +74,7 @@ const Home = ({ navigation }) => {
               .map((chave, index) => {
                 const list = data[chave];
                 return (
-                  <ContactListCard
-                    key={index}
-                    title={chave}
-                    data={list}
-                    onPress={handleOnPress}
-                  />
+                  <ContactListCard key={index} title={chave} data={list} onPress={handleOnPress} />
                 );
               })}
         </ScrollView>

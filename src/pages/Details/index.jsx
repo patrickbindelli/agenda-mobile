@@ -1,14 +1,15 @@
-import { MaterialIcons } from "@expo/vector-icons";
-import React, { useEffect, useState } from "react";
-import { Image, ScrollView, Text, ToastAndroid, View } from "react-native";
-import Button from "../../components/Button";
-import Card from "../../components/Card";
-import FakeProfilePicture from "../../components/FakeProfilePicture";
-import LabeledText from "../../components/LabeledText";
-import { Separator } from "../../components/Separator";
-import { deleteAsyncData, getAsyncDataById } from "../../utils/fetchData";
-import { useIsFocused } from "@react-navigation/native";
-import styles from "./styles";
+import { MaterialIcons } from '@expo/vector-icons';
+import { useIsFocused } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { Image, ScrollView, Text, ToastAndroid, View } from 'react-native';
+
+import styles from './styles';
+import Button from '../../components/Button';
+import Card from '../../components/Card';
+import FakeProfilePicture from '../../components/FakeProfilePicture';
+import LabeledText from '../../components/LabeledText';
+import { Separator } from '../../components/Separator';
+import { deleteAsyncData, getAsyncDataById } from '../../utils/fetchData';
 
 const Details = ({ route, navigation }) => {
   const { id } = route.params;
@@ -22,21 +23,21 @@ const Details = ({ route, navigation }) => {
     });
   }, [id, isFocused]);
 
-  const locale = "auto";
+  const locale = 'auto';
   const localeOptions = {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
   };
 
   const handleDelete = async () => {
     await deleteAsyncData(data.id);
-    ToastAndroid.show("Excluido.", ToastAndroid.SHORT);
+    ToastAndroid.show('Excluido.', ToastAndroid.SHORT);
     navigation.goBack();
   };
 
   const handleEdit = () => {
-    navigation.navigate("Add", { data });
+    navigation.navigate('Add', { data });
   };
 
   return (
@@ -52,44 +53,34 @@ const Details = ({ route, navigation }) => {
                 }}
               />
             )}
-            {!data.profilePicture && (
-              <FakeProfilePicture size={100} backgroundColor="#443592" />
-            )}
+            {!data.profilePicture && <FakeProfilePicture size={100} backgroundColor="#443592" />}
 
-            <Text
-              style={styles.profileNameText}
-            >{`${data.firstName} ${data.lastName}`}</Text>
+            <Text style={styles.profileNameText}>{`${data.firstName} ${data.lastName}`}</Text>
           </View>
 
           <View style={styles.optionsContainer}>
             <Button
-              title={"Editar"}
+              title="Editar"
               icon={<MaterialIcons name="edit" size={24} color="#fff" />}
               onPress={handleEdit}
             />
             <Button
-              title={"Excluir"}
+              title="Excluir"
               icon={<MaterialIcons name="delete" size={24} color="#fff" />}
               onPress={handleDelete}
             />
           </View>
 
-          <ScrollView
-            style={styles.content}
-            contentContainerStyle={styles.contentContainerStyle}
-          >
+          <ScrollView style={styles.content} contentContainerStyle={styles.contentContainerStyle}>
             <Card>
-              <LabeledText title={"Nome"} text={data.firstName} />
+              <LabeledText title="Nome" text={data.firstName} />
               <Separator />
-              <LabeledText title={"Sobrenome"} text={data.lastName} />
+              <LabeledText title="Sobrenome" text={data.lastName} />
               <Separator />
               {data.birthday && (
                 <LabeledText
-                  title={"Aniversário"}
-                  text={new Date(data.birthday).toLocaleDateString(
-                    locale,
-                    localeOptions
-                  )}
+                  title="Aniversário"
+                  text={new Date(data.birthday).toLocaleDateString(locale, localeOptions)}
                 />
               )}
             </Card>
@@ -99,8 +90,8 @@ const Details = ({ route, navigation }) => {
                 {data.emails.map((email, index) => {
                   return (
                     <View style={styles.verticalContainer} key={index}>
-                      <LabeledText title={"Email"} text={email.address} />
-                      {index + 1 != data.emails.length && <Separator />}
+                      <LabeledText title="Email" text={email.address} />
+                      {index + 1 !== data.emails.length && <Separator />}
                     </View>
                   );
                 })}
@@ -112,8 +103,8 @@ const Details = ({ route, navigation }) => {
                 {data.phones.map((phone, index) => {
                   return (
                     <View style={styles.verticalContainer} key={index}>
-                      <LabeledText title={"Telefone"} text={phone.number} />
-                      {index + 1 != data.emails.length && <Separator />}
+                      <LabeledText title="Telefone" text={phone.number} />
+                      {index + 1 !== data.emails.length && <Separator />}
                     </View>
                   );
                 })}
@@ -126,18 +117,15 @@ const Details = ({ route, navigation }) => {
               data.address.postalCode ||
               data.address.country) && (
               <Card>
-                {<LabeledText title={"Rua"} text={data.address.street} />}
+                <LabeledText title="Rua" text={data.address.street} />
                 <Separator />
-                <LabeledText title={"Número"} text={data.address.number} />
+                <LabeledText title="Número" text={data.address.number} />
                 <Separator />
-                <LabeledText
-                  title={"Bairro"}
-                  text={data.address.neighborhood}
-                />
+                <LabeledText title="Bairro" text={data.address.neighborhood} />
                 <Separator />
-                <LabeledText title={"CEP"} text={data.address.postalCode} />
+                <LabeledText title="CEP" text={data.address.postalCode} />
                 <Separator />
-                <LabeledText title={"País"} text={data.address.country} />
+                <LabeledText title="País" text={data.address.country} />
               </Card>
             )}
           </ScrollView>

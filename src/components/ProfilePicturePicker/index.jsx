@@ -1,26 +1,25 @@
-import React, { useState } from "react";
-import { TouchableOpacity, Image } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import styles from "./styles";
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import { MaterialIcons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import React from 'react';
+import { Image, TouchableOpacity } from 'react-native';
 
-import { useActionSheet } from "@expo/react-native-action-sheet";
-
-import * as ImagePicker from "expo-image-picker";
+import styles from './styles';
 
 const ProfilePicturePicker = ({ image, setImage }) => {
   const { showActionSheetWithOptions } = useActionSheet();
 
   const onPress = () => {
-    const options = ["Abrir Câmera", "Selecionar Arquivo", "Cancelar"];
+    const options = ['Abrir Câmera', 'Selecionar Arquivo', 'Cancelar'];
     const cancelButtonIndex = 2;
-    const iconsColor = "#fff";
-    const cancelIconColor = "#E5484D";
+    const iconsColor = '#fff';
+    const cancelIconColor = '#E5484D';
     showActionSheetWithOptions(
       {
         options,
         cancelButtonIndex,
         cancelButtonTintColor: cancelIconColor,
-        title: "Selecionar imagem",
+        title: 'Selecionar imagem',
         icons: [
           <MaterialIcons name="camera-alt" size={24} color={iconsColor} />,
           <MaterialIcons name="image" size={24} color={iconsColor} />,
@@ -39,13 +38,12 @@ const ProfilePicturePicker = ({ image, setImage }) => {
             handlePickImage();
             break;
         }
-      }
+      },
     );
   };
 
   const handlePickImage = async () => {
-    const permissionResult =
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted) {
       const result = await ImagePicker.launchImageLibraryAsync();

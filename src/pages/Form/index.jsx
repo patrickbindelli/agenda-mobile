@@ -1,31 +1,21 @@
-import React, { useEffect, useState } from "react";
-import {
-  ScrollView,
-  Text,
-  ToastAndroid,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import Card from "../../components/Card";
-import DateInput from "../../components/DateInput";
-import StyledInput from "../../components/StyledInput";
+import { MaterialIcons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { ScrollView, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
 
-import styles from "./styles";
-
-import { MaterialIcons } from "@expo/vector-icons";
-
-import { LabeledContainer } from "../../components/LabeledContainer";
-import { setAsyncData, updateAsyncData } from "../../utils/fetchData";
-
-import ProfilePicturePicker from "../../components/ProfilePicturePicker";
-import useGetCep from "../../hooks/userGetCep";
-
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import styles from './styles';
+import Card from '../../components/Card';
+import DateInput from '../../components/DateInput';
+import { LabeledContainer } from '../../components/LabeledContainer';
+import ProfilePicturePicker from '../../components/ProfilePicturePicker';
+import StyledInput from '../../components/StyledInput';
+import useGetCep from '../../hooks/userGetCep';
+import { setAsyncData, updateAsyncData } from '../../utils/fetchData';
 
 const Form = ({ route, navigation }) => {
   const { data } = route.params || {};
 
-  const [isEditing, setIsEditing] = useState(data ? true : false);
+  const [isEditing] = useState(!!data);
 
   const handleCancel = () => {
     navigation.goBack();
@@ -43,18 +33,18 @@ const Form = ({ route, navigation }) => {
       ? { ...data }
       : {
           profilePicture: null,
-          firstName: "",
-          lastName: "",
+          firstName: '',
+          lastName: '',
           address: {
-            street: "",
-            number: "",
-            neighborhood: "",
-            city: "",
-            postalCode: "",
-            country: "",
+            street: '',
+            number: '',
+            neighborhood: '',
+            city: '',
+            postalCode: '',
+            country: '',
           },
-          phones: [{ number: "" }],
-          emails: [{ address: "" }],
+          phones: [{ number: '' }],
+          emails: [{ address: '' }],
         },
   });
 
@@ -64,7 +54,7 @@ const Form = ({ route, navigation }) => {
     remove: removePhone,
   } = useFieldArray({
     control,
-    name: "phones",
+    name: 'phones',
     rules: {
       required: true,
       minLength: 1,
@@ -78,7 +68,7 @@ const Form = ({ route, navigation }) => {
     remove: removemail,
   } = useFieldArray({
     control,
-    name: "emails",
+    name: 'emails',
     rules: {
       required: true,
       minLength: 1,
@@ -89,31 +79,31 @@ const Form = ({ route, navigation }) => {
   const { address, error, loading, consultCEP } = useGetCep();
 
   const handleConsultCep = () => {
-    ToastAndroid.show("Pesquisando CEP...", ToastAndroid.SHORT);
-    consultCEP(getValues("address.postalCode"));
+    ToastAndroid.show('Pesquisando CEP...', ToastAndroid.SHORT);
+    consultCEP(getValues('address.postalCode'));
   };
 
   useEffect(() => {
     if (!loading && address && !error) {
-      setValue("address.city", address.localidade);
-      setValue("address.street", address.logradouro);
-      setValue("address.postalCode", address.cep);
-      setValue("address.neighborhood", address.bairro);
-      setValue("address.country", "Brasil");
+      setValue('address.city', address.localidade);
+      setValue('address.street', address.logradouro);
+      setValue('address.postalCode', address.cep);
+      setValue('address.neighborhood', address.bairro);
+      setValue('address.country', 'Brasil');
 
-      clearErrors("address");
+      clearErrors('address');
     }
   }, [loading, address, error]);
 
   const onSubmit = async (data) => {
     if (!isEditing) {
       setAsyncData(data).then(() => {
-        ToastAndroid.show("Contato salvo.", ToastAndroid.SHORT);
+        ToastAndroid.show('Contato salvo.', ToastAndroid.SHORT);
         navigation.goBack();
       });
     } else {
       updateAsyncData(data.id, data).then(() => {
-        ToastAndroid.show("Contato atualizado.", ToastAndroid.SHORT);
+        ToastAndroid.show('Contato atualizado.', ToastAndroid.SHORT);
         navigation.goBack();
       });
     }
@@ -135,7 +125,7 @@ const Form = ({ route, navigation }) => {
           />
         </View>
         <Card>
-          <LabeledContainer label={"Nome"}>
+          <LabeledContainer label="Nome">
             <Controller
               name="firstName"
               control={control}
@@ -144,7 +134,7 @@ const Form = ({ route, navigation }) => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
-                  title={"Nome"}
+                  title="Nome"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -160,7 +150,7 @@ const Form = ({ route, navigation }) => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
-                  title={"Sobrenome"}
+                  title="Sobrenome"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -170,7 +160,7 @@ const Form = ({ route, navigation }) => {
             />
           </LabeledContainer>
 
-          <LabeledContainer label={"Aniversário"}>
+          <LabeledContainer label="Aniversário">
             <Controller
               name="birthday"
               control={control}
@@ -179,8 +169,8 @@ const Form = ({ route, navigation }) => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <DateInput
-                  placeholder={"Aniversário"}
-                  title={"Aniversário"}
+                  placeholder="Aniversário"
+                  title="Aniversário"
                   date={isEditing ? new Date(value) : value}
                   setDate={onChange}
                   error={errors.birthday}
@@ -190,11 +180,11 @@ const Form = ({ route, navigation }) => {
           </LabeledContainer>
 
           <LabeledContainer
-            label={"Telefones"}
+            label="Telefones"
             icon={<MaterialIcons name="add" size={24} color="#A09FA6" />}
             onIconPress={() => {
               if (phoneFields.length < 5) {
-                appendPhone({ number: "" });
+                appendPhone({ number: '' });
               }
             }}
           >
@@ -204,28 +194,22 @@ const Form = ({ route, navigation }) => {
                   key={index}
                   name={`phones[${index}].number`}
                   control={control}
-                  defaultValue={""}
+                  defaultValue=""
                   rules={{
                     required: true,
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <StyledInput
-                      title={"Telefone"}
+                      title="Telefone"
                       onBlur={onBlur}
                       onChangeText={onChange}
                       onSubmit={() => {
                         if (index > 0) removePhone(index);
                       }}
                       value={value}
-                      error={errors?.phones?.[index]?.["number"]}
+                      error={errors?.phones?.[index]?.['number']}
                       onEnter={false}
-                      icon={
-                        <MaterialIcons
-                          name="remove"
-                          size={20}
-                          color="#E54D2E"
-                        />
-                      }
+                      icon={<MaterialIcons name="remove" size={20} color="#E54D2E" />}
                     />
                   )}
                 />
@@ -234,11 +218,11 @@ const Form = ({ route, navigation }) => {
           </LabeledContainer>
 
           <LabeledContainer
-            label={"Emails"}
+            label="Emails"
             icon={<MaterialIcons name="add" size={24} color="#A09FA6" />}
             onIconPress={() => {
               if (phoneFields.length < 5) {
-                appendMail({ address: "" });
+                appendMail({ address: '' });
               }
             }}
           >
@@ -248,28 +232,22 @@ const Form = ({ route, navigation }) => {
                   key={index}
                   name={`emails[${index}].address`}
                   control={control}
-                  defaultValue={""}
+                  defaultValue=""
                   rules={{
                     required: true,
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <StyledInput
-                      title={"Email"}
+                      title="Email"
                       onBlur={onBlur}
                       onChangeText={onChange}
                       onSubmit={() => {
                         if (index > 0) removemail(index);
                       }}
                       value={value}
-                      error={errors?.emails?.[index]?.["address"]}
+                      error={errors?.emails?.[index]?.['address']}
                       onEnter={false}
-                      icon={
-                        <MaterialIcons
-                          name="remove"
-                          size={20}
-                          color="#E54D2E"
-                        />
-                      }
+                      icon={<MaterialIcons name="remove" size={20} color="#E54D2E" />}
                     />
                   )}
                 />
@@ -277,7 +255,7 @@ const Form = ({ route, navigation }) => {
             })}
           </LabeledContainer>
 
-          <LabeledContainer label={"Endereço"}>
+          <LabeledContainer label="Endereço">
             <Controller
               name="address.postalCode"
               control={control}
@@ -286,15 +264,13 @@ const Form = ({ route, navigation }) => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
-                  title={"CEP"}
+                  title="CEP"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   onSubmit={handleConsultCep}
                   value={value}
                   error={errors.address?.postalCode}
-                  icon={
-                    <MaterialIcons name="search" size={24} color="#A09FA6" />
-                  }
+                  icon={<MaterialIcons name="search" size={24} color="#A09FA6" />}
                 />
               )}
             />
@@ -306,7 +282,7 @@ const Form = ({ route, navigation }) => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
-                  title={"Rua"}
+                  title="Rua"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -322,7 +298,7 @@ const Form = ({ route, navigation }) => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
-                  title={"Número"}
+                  title="Número"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -338,7 +314,7 @@ const Form = ({ route, navigation }) => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
-                  title={"Bairro"}
+                  title="Bairro"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -354,7 +330,7 @@ const Form = ({ route, navigation }) => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
-                  title={"Cidade"}
+                  title="Cidade"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -370,7 +346,7 @@ const Form = ({ route, navigation }) => {
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
-                  title={"País"}
+                  title="País"
                   onBlur={onBlur}
                   onChangeText={onChange}
                   value={value}
@@ -383,10 +359,7 @@ const Form = ({ route, navigation }) => {
       </ScrollView>
 
       <View style={styles.options}>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleSubmit(onSubmit)}
-        >
+        <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)}>
           <Text style={styles.buttonText}>Salvar</Text>
         </TouchableOpacity>
         <View style={styles.verticalSeparator} />

@@ -1,10 +1,10 @@
-import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import Card from "../Card";
-import { Separator } from "../Separator";
-import styles from "./styles";
+import React from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
-import FakeProfilePicture from "../FakeProfilePicture";
+import styles from './styles';
+import Card from '../Card';
+import FakeProfilePicture from '../FakeProfilePicture';
+import { Separator } from '../Separator';
 
 export const ContactListCard = ({ title, data, onPress }) => {
   return (
@@ -33,9 +33,7 @@ export const ContactListCard = ({ title, data, onPress }) => {
                 {!element.profilePicture && <FakeProfilePicture size={40} />}
 
                 <View style={styles.nameContainer}>
-                  <Text
-                    style={styles.text}
-                  >{`${element.firstName} ${element.lastName}`}</Text>
+                  <Text style={styles.text}>{`${element.firstName} ${element.lastName}`}</Text>
                   <Separator />
                 </View>
               </TouchableOpacity>

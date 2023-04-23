@@ -1,5 +1,5 @@
-import axios from "axios";
-import { useState } from "react";
+import axios from 'axios';
+import { useState } from 'react';
 
 const useGetCep = () => {
   const [address, setAddress] = useState(null);
@@ -11,7 +11,7 @@ const useGetCep = () => {
     setError(false);
 
     axios({
-      method: "get",
+      method: 'get',
       url: `https://viacep.com.br/ws/${cep}/json/`,
     })
       .then((response) => {

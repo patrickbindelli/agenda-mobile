@@ -1,7 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as Crypto from "expo-crypto";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Crypto from 'expo-crypto';
 
-const STORAGE_KEY = "contatos";
+const STORAGE_KEY = 'contatos';
 
 export const getAsyncData = async () => {
   const response = await AsyncStorage.getItem(STORAGE_KEY);
@@ -23,30 +23,22 @@ export const getAsyncDataById = async (id) => {
 
   return undefined;
 };
-
 export const setAsyncData = async (value) => {
   const name = value.firstName.trim();
   const firstChar = name.charAt(0).toUpperCase();
 
-  let data = await getAsyncData();
-  if (!data) {
-    data = {};
-  }
+  const data = (await getAsyncData()) || {};
 
-  const UUID = Crypto.randomUUID();
-  value.id = UUID;
+  value.id = Crypto.randomUUID();
 
-  if (/^[A-Z]/.test(firstChar)) {
-    data[firstChar] ? data[firstChar].push(value) : (data[firstChar] = [value]);
-  } else {
-    data["#"] ? data["#"].push(value) : (data["#"] = [value]);
-  }
+  const key = /^[A-Z]/.test(firstChar) ? firstChar : '#';
+  data[key] = [...(data[key] || []), value];
 
   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 };
 
 export const updateAsyncData = async (id, updatedValues) => {
-  let data = await getAsyncData();
+  const data = await getAsyncData();
   if (!data) {
     return;
   }
@@ -68,7 +60,7 @@ export const updateAsyncData = async (id, updatedValues) => {
 };
 
 export const deleteAsyncData = async (id) => {
-  let data = await getAsyncData();
+  const data = await getAsyncData();
   if (!data) {
     return;
   }

@@ -1,8 +1,9 @@
-import React from "react";
-import { TouchableOpacity, Text } from "react-native";
-import styles from "./styles";
+import React from 'react';
+import { TouchableOpacity, Text } from 'react-native';
 
-const Button = ({ title, icon, onPress, background = "#232326" }) => {
+import styles from './styles';
+
+const Button = ({ title, icon, onPress, background = '#232326' }) => {
   return (
     <TouchableOpacity
       style={{ ...styles.container, backgroundColor: background }}

@@ -1,9 +1,10 @@
-import React from "react";
-import { View } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import styles from "./styles";
+import { MaterialIcons } from '@expo/vector-icons';
+import React from 'react';
+import { View } from 'react-native';
 
-const FakeProfilePicture = ({ size = 40, backgroundColor = "#2E2E32" }) => {
+import styles from './styles';
+
+const FakeProfilePicture = ({ size = 40, backgroundColor = '#2E2E32' }) => {
   return (
     <View
       style={{
@@ -11,7 +12,7 @@ const FakeProfilePicture = ({ size = 40, backgroundColor = "#2E2E32" }) => {
         width: size,
         height: size,
         borderRadius: size / 2,
-        backgroundColor: backgroundColor,
+        backgroundColor,
       }}
     >
       <MaterialIcons name="person" size={size - 5} color="white" />
