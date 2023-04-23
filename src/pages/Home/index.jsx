@@ -28,7 +28,7 @@ const Home = ({ navigation }) => {
   }, [isFocused]);
 
   const handleOnPress = (contact) => {
-    navigation.navigate("Details", { data: contact });
+    navigation.navigate("Details", { id: contact.id });
   };
 
   const handleSearch = () => {
@@ -70,7 +70,7 @@ const Home = ({ navigation }) => {
           style={styles.content}
           contentContainerStyle={styles.scrollView}
         >
-          {!data && (
+          {!Object.keys(searchResults).length && (
             <View style={styles.textContainer}>
               <Text style={styles.text}>
                 Nenhum dado encontrado...{"\n"}Clique em '+' para adicionar um

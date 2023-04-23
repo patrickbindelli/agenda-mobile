@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import Card from "../Card";
-import styles from "./styles";
 import { Separator } from "../Separator";
+import styles from "./styles";
 
 import FakeProfilePicture from "../FakeProfilePicture";
 
@@ -20,9 +20,6 @@ export const ContactListCard = ({ title, data, onPress }) => {
                 key={index}
                 style={styles.cardContainer}
                 onPress={() => onPress(element)}
-                onLongPress={() => {
-                  /* TODO função para excluir o elemento selecionado */
-                }}
               >
                 {element.profilePicture && (
                   <Image

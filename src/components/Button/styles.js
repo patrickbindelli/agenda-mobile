@@ -5,12 +5,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    padding: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: 15,
     gap: 5,
   },
   text: {
     color: "#fff",
+    fontSize: 15,
   },
 });
 

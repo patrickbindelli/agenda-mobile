@@ -7,34 +7,82 @@ import {
   View,
 } from "react-native";
 import Card from "../../components/Card";
+import DateInput from "../../components/DateInput";
 import StyledInput from "../../components/StyledInput";
 
-import DateIput from "../../components/DateInput";
 import styles from "./styles";
 
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { LabeledContainer } from "../../components/LabeledContainer";
-import { setAsyncData } from "../../utils/fetchData";
+import { setAsyncData, updateAsyncData } from "../../utils/fetchData";
 
 import ProfilePicturePicker from "../../components/ProfilePicturePicker";
 import useGetCep from "../../hooks/userGetCep";
 
-const Form = ({ navigation }) => {
-  const [formData, setFormData] = useState({
-    profilePicture: null,
-    firstName: "",
-    lastName: "",
-    birthday: "",
-    phones: [{ number: "", type: "" }],
-    emails: [{ address: "" }],
-    address: {
-      street: "",
-      number: "",
-      neighborhood: "",
-      city: "",
-      postalCode: "",
-      country: "",
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+
+const Form = ({ route, navigation }) => {
+  const { data } = route.params || {};
+
+  const [isEditing, setIsEditing] = useState(data ? true : false);
+
+  const handleCancel = () => {
+    navigation.goBack();
+  };
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    getValues,
+    clearErrors,
+  } = useForm({
+    defaultValues: isEditing
+      ? { ...data }
+      : {
+          profilePicture: null,
+          firstName: "",
+          lastName: "",
+          address: {
+            street: "",
+            number: "",
+            neighborhood: "",
+            city: "",
+            postalCode: "",
+            country: "",
+          },
+          phones: [{ number: "" }],
+          emails: [{ address: "" }],
+        },
+  });
+
+  const {
+    fields: phoneFields,
+    append: appendPhone,
+    remove: removePhone,
+  } = useFieldArray({
+    control,
+    name: "phones",
+    rules: {
+      required: true,
+      minLength: 1,
+      maxLength: 5,
+    },
+  });
+
+  const {
+    fields: mailFields,
+    append: appendMail,
+    remove: removemail,
+  } = useFieldArray({
+    control,
+    name: "emails",
+    rules: {
+      required: true,
+      minLength: 1,
+      maxLength: 5,
     },
   });
 
@@ -42,245 +90,293 @@ const Form = ({ navigation }) => {
 
   const handleConsultCep = () => {
     ToastAndroid.show("Pesquisando CEP...", ToastAndroid.SHORT);
-    consultCEP(formData.address.postalCode);
+    consultCEP(getValues("address.postalCode"));
   };
 
   useEffect(() => {
     if (!loading && address && !error) {
-      setFormData({
-        ...formData,
-        address: {
-          ...formData.address,
-          street: address.logradouro,
-          postalCode: address.cep,
-          neighborhood: address.bairro,
-          city: address.localidade,
-          country: "Brasil",
-        },
-      });
+      setValue("address.city", address.localidade);
+      setValue("address.street", address.logradouro);
+      setValue("address.postalCode", address.cep);
+      setValue("address.neighborhood", address.bairro);
+      setValue("address.country", "Brasil");
+
+      clearErrors("address");
     }
   }, [loading, address, error]);
 
-  function showSuccessToast() {
-    ToastAndroid.show("Contato salvo com sucesso.", ToastAndroid.SHORT);
-  }
-
-  const handleCancel = () => {
-    navigation.goBack();
-  };
-
-  const storeData = async (value) => {
-    setAsyncData(value).then(() => {
-      showSuccessToast();
-      navigation.goBack();
-    });
-  };
-
-  const handleInputChange = (name, value) => {
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const setProfilePicture = (image) => {
-    handleInputChange("profilePicture", image);
-  };
-
-  const handleAddArrayField = (array, arrayField) => {
-    const currentEmails = formData[array];
-    currentEmails.push({ [arrayField]: "" });
-
-    setFormData({ ...formData, [array]: currentEmails });
-  };
-
-  const handleAddEmail = () => {
-    handleAddArrayField("emails", "address");
-  };
-
-  const handleAddPhone = () => {
-    handleAddArrayField("phones", "number");
-  };
-
-  const handleRemoveArrayElement = (array, index) => {
-    const currentEmails = [...formData[array]];
-    currentEmails.splice(index, 1);
-
-    setFormData({ ...formData, [array]: currentEmails });
-  };
-
-  const handleAddresChange = (name, value) => {
-    setFormData({
-      ...formData,
-      address: {
-        ...formData.address,
-        [name]: value,
-      },
-    });
-  };
-
-  const handleArrayInputChange = (index, field, arrayField, value) => {
-    const updatedArray = [...formData[field]];
-
-    updatedArray[index] = {
-      ...updatedArray[index],
-      [arrayField]: value,
-    };
-
-    setFormData((prevState) => ({ ...prevState, [field]: updatedArray }));
+  const onSubmit = async (data) => {
+    if (!isEditing) {
+      setAsyncData(data).then(() => {
+        ToastAndroid.show("Contato salvo.", ToastAndroid.SHORT);
+        navigation.goBack();
+      });
+    } else {
+      updateAsyncData(data.id, data).then(() => {
+        ToastAndroid.show("Contato atualizado.", ToastAndroid.SHORT);
+        navigation.goBack();
+      });
+    }
   };
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.profilePictureContainer}>
-          <ProfilePicturePicker
-            image={formData.profilePicture}
-            setImage={setProfilePicture}
+          <Controller
+            name="profilePicture"
+            control={control}
+            rules={{
+              required: false,
+            }}
+            render={({ field: { onChange, value } }) => (
+              <ProfilePicturePicker image={value} setImage={onChange} />
+            )}
           />
         </View>
         <Card>
           <LabeledContainer label={"Nome"}>
-            <StyledInput
-              title={"Nome"}
-              value={formData.firstName}
-              onChangeText={(value) => {
-                handleInputChange("firstName", value);
+            <Controller
+              name="firstName"
+              control={control}
+              rules={{
+                required: true,
               }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledInput
+                  title={"Nome"}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.firstName}
+                />
+              )}
             />
-            <StyledInput
-              title={"Sobrenome"}
-              value={formData.lastName}
-              onChangeText={(value) => {
-                handleInputChange("lastName", value);
+            <Controller
+              name="lastName"
+              control={control}
+              rules={{
+                required: true,
               }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledInput
+                  title={"Sobrenome"}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.lastName}
+                />
+              )}
             />
           </LabeledContainer>
 
           <LabeledContainer label={"Aniversário"}>
-            <DateIput
-              placeholder={"Aniversário"}
-              title={"Aniversário"}
-              date={formData.birthday}
-              setDate={(value) => {
-                handleInputChange("birthday", value);
+            <Controller
+              name="birthday"
+              control={control}
+              rules={{
+                required: true,
               }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <DateInput
+                  placeholder={"Aniversário"}
+                  title={"Aniversário"}
+                  date={isEditing ? new Date(value) : value}
+                  setDate={onChange}
+                  error={errors.birthday}
+                />
+              )}
             />
           </LabeledContainer>
 
           <LabeledContainer
-            label={"Telefone"}
+            label={"Telefones"}
             icon={<MaterialIcons name="add" size={24} color="#A09FA6" />}
-            onIconPress={handleAddPhone}
+            onIconPress={() => {
+              if (phoneFields.length < 5) {
+                appendPhone({ number: "" });
+              }
+            }}
           >
-            {formData.phones.map((phone, index) => {
+            {phoneFields.map((field, index) => {
               return (
-                <View key={index} style={styles.horizontalContainer}>
-                  <View style={styles.inputContainer}>
+                <Controller
+                  key={index}
+                  name={`phones[${index}].number`}
+                  control={control}
+                  defaultValue={""}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <StyledInput
                       title={"Telefone"}
-                      value={phone.number}
-                      onChangeText={(value) => {
-                        handleArrayInputChange(
-                          index,
-                          "phones",
-                          "number",
-                          value
-                        );
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      onSubmit={() => {
+                        if (index > 0) removePhone(index);
                       }}
+                      value={value}
+                      error={errors?.phones?.[index]?.["number"]}
+                      onEnter={false}
+                      icon={
+                        <MaterialIcons
+                          name="remove"
+                          size={20}
+                          color="#E54D2E"
+                        />
+                      }
                     />
-                  </View>
-
-                  <TouchableOpacity
-                    style={styles.icon}
-                    onPress={() => handleRemoveArrayElement("phones", index)}
-                  >
-                    <MaterialIcons name="remove" size={20} color="#E54D2E" />
-                  </TouchableOpacity>
-                </View>
+                  )}
+                />
               );
             })}
           </LabeledContainer>
 
           <LabeledContainer
-            label={"Email"}
+            label={"Emails"}
             icon={<MaterialIcons name="add" size={24} color="#A09FA6" />}
-            onIconPress={handleAddEmail}
+            onIconPress={() => {
+              if (phoneFields.length < 5) {
+                appendMail({ address: "" });
+              }
+            }}
           >
-            {formData.emails.map((email, index) => {
+            {mailFields.map((field, index) => {
               return (
-                <View key={index} style={styles.horizontalContainer}>
-                  <View style={styles.inputContainer}>
+                <Controller
+                  key={index}
+                  name={`emails[${index}].address`}
+                  control={control}
+                  defaultValue={""}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
                     <StyledInput
                       title={"Email"}
-                      value={email.address}
-                      onChangeText={(value) => {
-                        handleArrayInputChange(
-                          index,
-                          "emails",
-                          "address",
-                          value
-                        );
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      onSubmit={() => {
+                        if (index > 0) removemail(index);
                       }}
+                      value={value}
+                      error={errors?.emails?.[index]?.["address"]}
+                      onEnter={false}
+                      icon={
+                        <MaterialIcons
+                          name="remove"
+                          size={20}
+                          color="#E54D2E"
+                        />
+                      }
                     />
-                  </View>
-
-                  <TouchableOpacity
-                    style={styles.icon}
-                    onPress={() => handleRemoveArrayElement("emails", index)}
-                  >
-                    <MaterialIcons name="remove" size={20} color="#E54D2E" />
-                  </TouchableOpacity>
-                </View>
+                  )}
+                />
               );
             })}
           </LabeledContainer>
 
           <LabeledContainer label={"Endereço"}>
-            <StyledInput
-              title={"CEP"}
-              value={formData.address.postalCode}
-              onChangeText={(value) => {
-                handleAddresChange("postalCode", value);
+            <Controller
+              name="address.postalCode"
+              control={control}
+              rules={{
+                required: true,
               }}
-              icon={<MaterialIcons name="search" size={24} color="#A09FA6" />}
-              onSubmit={handleConsultCep}
-              editable={!loading}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledInput
+                  title={"CEP"}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  onSubmit={handleConsultCep}
+                  value={value}
+                  error={errors.address?.postalCode}
+                  icon={
+                    <MaterialIcons name="search" size={24} color="#A09FA6" />
+                  }
+                />
+              )}
             />
-            <StyledInput
-              title={"Rua"}
-              value={formData.address.street}
-              onChangeText={(value) => {
-                handleAddresChange("street", value);
+            <Controller
+              name="address.street"
+              control={control}
+              rules={{
+                required: true,
               }}
-              editable={!loading}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledInput
+                  title={"Rua"}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.address?.street}
+                />
+              )}
             />
-            <StyledInput
-              title={"Número"}
-              value={formData.address.number}
-              onChangeText={(value) => {
-                handleAddresChange("number", value);
+            <Controller
+              name="address.number"
+              control={control}
+              rules={{
+                required: true,
               }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledInput
+                  title={"Número"}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.address?.number}
+                />
+              )}
             />
-            <StyledInput
-              title={"Bairro"}
-              value={formData.address.neighborhood}
-              onChangeText={(value) => {
-                handleAddresChange("neighborhood", value);
+            <Controller
+              name="address.neighborhood"
+              control={control}
+              rules={{
+                required: true,
               }}
-              editable={!loading}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledInput
+                  title={"Bairro"}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.address?.neighborhood}
+                />
+              )}
             />
-            <StyledInput
-              title={"Cidade"}
-              value={formData.address.city}
-              onChangeText={(value) => {
-                handleAddresChange("city", value);
+            <Controller
+              name="address.city"
+              control={control}
+              rules={{
+                required: true,
               }}
-              editable={!loading}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledInput
+                  title={"Cidade"}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.address?.city}
+                />
+              )}
             />
-            <StyledInput
-              title={"País"}
-              value={formData.address.country}
-              onChangeText={(value) => {
-                handleAddresChange("country", value);
+            <Controller
+              name="address.country"
+              control={control}
+              rules={{
+                required: true,
               }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledInput
+                  title={"País"}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  error={errors.address?.country}
+                />
+              )}
             />
           </LabeledContainer>
         </Card>
@@ -289,9 +385,7 @@ const Form = ({ navigation }) => {
       <View style={styles.options}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => {
-            storeData(formData);
-          }}
+          onPress={handleSubmit(onSubmit)}
         >
           <Text style={styles.buttonText}>Salvar</Text>
         </TouchableOpacity>

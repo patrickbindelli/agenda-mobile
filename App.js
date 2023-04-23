@@ -1,29 +1,16 @@
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { KeyboardAvoidingView } from "react-native";
 import * as React from "react";
-import Home from "./src/pages/Home";
+import { KeyboardAvoidingView } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import styles from "./global/styles";
 import Details from "./src/pages/Details";
 import Form from "./src/pages/Form";
-import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-
+import Home from "./src/pages/Home";
 const Stack = createNativeStackNavigator();
 
 function App() {
-  const config = {
-    animation: "spring",
-    config: {
-      stiffness: 1000,
-      damping: 50,
-      mass: 3,
-      overshootClamping: false,
-      restDisplacementThreshold: 0.01,
-      restSpeedThreshold: 0.01,
-    },
-  };
-
   return (
     <SafeAreaProvider>
       <ActionSheetProvider>

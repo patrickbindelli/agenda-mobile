@@ -6,7 +6,7 @@ import { Separator } from "../Separator";
 
 import styles from "./styles";
 
-const DateIput = ({ placeholder, date, setDate }) => {
+const DateInput = ({ placeholder, date, setDate, error }) => {
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
@@ -32,6 +32,9 @@ const DateIput = ({ placeholder, date, setDate }) => {
 
   return (
     <View style={styles.container}>
+      {error && (
+        <Text style={styles.errorText}>Esse campo é obrigatório...</Text>
+      )}
       <TouchableOpacity style={styles.input} onPress={showDatepicker}>
         {!date && <Text style={styles.text}>{placeholder}</Text>}
         {date && (
@@ -55,4 +58,4 @@ const DateIput = ({ placeholder, date, setDate }) => {
   );
 };
 
-export default DateIput;
+export default DateInput;

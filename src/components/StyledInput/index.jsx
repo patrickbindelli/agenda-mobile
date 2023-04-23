@@ -10,14 +10,25 @@ const StyledInput = ({
   icon,
   onSubmit,
   editable = true,
+  onBlur,
+  error,
+  onEnter = true,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
+  const handleBlur = () => {
+    if (onBlur) {
+      onBlur();
+    }
+    setIsFocused(false);
+  };
 
   return (
     <View style={styles.container}>
+      {error && (
+        <Text style={styles.errorText}>Esse campo é obrigatório...</Text>
+      )}
       <View style={styles.inputContainer}>
         <TextInput
           style={
@@ -35,7 +46,11 @@ const StyledInput = ({
           selectionColor={"#6E56CF"}
           placeholder={title}
           placeholderTextColor={editable ? "#A09FA6" : "#4C5155"}
-          onSubmitEditing={onSubmit}
+          onSubmitEditing={() => {
+            if (onEnter && onSubmit) {
+              onSubmit();
+            }
+          }}
           editable={editable}
         />
         <TouchableOpacity onPress={onSubmit}>{icon}</TouchableOpacity>

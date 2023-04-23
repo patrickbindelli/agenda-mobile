@@ -47,6 +47,14 @@ const styles = StyleSheet.create({
     width: "100%",
     gap: 10,
   },
+  optionsContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 10,
+    paddingHorizontal: 10,
+  },
 });
 
 export default styles;

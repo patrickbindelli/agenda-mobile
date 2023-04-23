@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
     gap: 5,
     paddingVertical: 5,
@@ -18,6 +18,10 @@ const styles = StyleSheet.create({
   text: {
     color: "#A09FA6",
     fontSize: 15,
+  },
+  errorText: {
+    color: "#E54D2E",
+    fontSize: 12,
   },
   input: {
     flex: 1,
