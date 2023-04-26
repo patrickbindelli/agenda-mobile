@@ -146,7 +146,7 @@ const Form = ({ route, navigation }) => {
               name="lastName"
               control={control}
               rules={{
-                required: true,
+                required: false,
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
@@ -165,7 +165,7 @@ const Form = ({ route, navigation }) => {
               name="birthday"
               control={control}
               rules={{
-                required: true,
+                required: false,
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <DateInput
@@ -234,7 +234,7 @@ const Form = ({ route, navigation }) => {
                   control={control}
                   defaultValue=""
                   rules={{
-                    required: true,
+                    required: false,
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <StyledInput
@@ -260,7 +260,7 @@ const Form = ({ route, navigation }) => {
               name="address.postalCode"
               control={control}
               rules={{
-                required: true,
+                required: false,
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
@@ -278,7 +278,7 @@ const Form = ({ route, navigation }) => {
               name="address.street"
               control={control}
               rules={{
-                required: true,
+                required: false,
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
@@ -294,7 +294,7 @@ const Form = ({ route, navigation }) => {
               name="address.number"
               control={control}
               rules={{
-                required: true,
+                required: false,
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
@@ -310,7 +310,7 @@ const Form = ({ route, navigation }) => {
               name="address.neighborhood"
               control={control}
               rules={{
-                required: true,
+                required: false,
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
@@ -326,7 +326,7 @@ const Form = ({ route, navigation }) => {
               name="address.city"
               control={control}
               rules={{
-                required: true,
+                required: false,
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput
@@ -342,7 +342,7 @@ const Form = ({ route, navigation }) => {
               name="address.country"
               control={control}
               rules={{
-                required: true,
+                required: false,
               }}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledInput

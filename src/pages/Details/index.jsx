@@ -75,7 +75,7 @@ const Details = ({ route, navigation }) => {
             <Card>
               <LabeledText title="Nome" text={data.firstName} />
               <Separator />
-              <LabeledText title="Sobrenome" text={data.lastName} />
+              {data.lastName && <LabeledText title="Sobrenome" text={data.lastName} />}
               <Separator />
               {data.birthday && (
                 <LabeledText
